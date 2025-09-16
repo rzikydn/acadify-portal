@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { User, Calendar, FileText, Bell, LogIn, UserPlus, GraduationCap, Clock, Users } from 'lucide-react';
+import ScrollVelocity from './components/ScrollVelocity';
+import './components/ScrollVelocity.css';
 
 function App() {
   const navigationItems = [
@@ -11,35 +13,20 @@ function App() {
   ];
 
   const cards = [
-    {
-      title: 'Absensi',
-      description: 'Pantau kehadiran dan rekap absensi mahasiswa secara real-time',
-      icon: <Users className="w-8 h-8 text-blue-600" />,
-    },
-    {
-      title: 'Jadwal Kuliah',
-      description: 'Akses jadwal perkuliahan lengkap dengan ruang dan dosen pengampu',
-      icon: <Calendar className="w-8 h-8 text-blue-600" />,
-    },
-    {
-      title: 'Pengumuman',
-      description: 'Dapatkan informasi terbaru seputar kegiatan akademik dan kampus',
-      icon: <Bell className="w-8 h-8 text-blue-600" />,
-    },
-    {
-      title: 'Nilai & Transkrip',
-      description: 'Lihat nilai semester dan transkrip akademik secara lengkap',
-      icon: <FileText className="w-8 h-8 text-blue-600" />,
-    },
+    { title: 'Absensi', description: 'Pantau kehadiran dan rekap absensi mahasiswa secara real-time', icon: <Users className="w-8 h-8 text-blue-600" /> },
+    { title: 'Jadwal Kuliah', description: 'Akses jadwal perkuliahan lengkap dengan ruang dan dosen pengampu', icon: <Calendar className="w-8 h-8 text-blue-600" /> },
+    { title: 'Pengumuman', description: 'Dapatkan informasi terbaru seputar kegiatan akademik dan kampus', icon: <Bell className="w-8 h-8 text-blue-600" /> },
+    { title: 'Nilai & Transkrip', description: 'Lihat nilai semester dan transkrip akademik secara lengkap', icon: <FileText className="w-8 h-8 text-blue-600" /> },
   ];
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
-      <header className="bg-[#0f62c1] shadow-lg">
+      <header className="bg-[#0f62c1] shadow-lg relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-12 md:py-16">
-            {/* Logo/Title */}
             <div className="flex items-center">
               <GraduationCap className="w-10 h-10 text-white mr-3" />
               <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
@@ -47,86 +34,98 @@ function App() {
               </h1>
             </div>
 
-            {/* Navigation */}
-            <nav className="hidden md:flex space-x-4">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex space-x-4">
               {navigationItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20"
+                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20 whitespace-nowrap"
                 >
                   {item.name}
                 </a>
               ))}
             </nav>
 
-            {/* Mobile menu button */}
-            <button className="md:hidden text-white p-2">
+            {/* Mobile Menu Button */}
+            <button
+              className="md:flex lg:hidden text-white p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:block lg:hidden bg-[#0f62c1]">
+            <nav className="px-4 pb-4 space-y-2">
+              {navigationItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="block bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20"
+                >
+                  {item.name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="bg-white py-20 md:py-32">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              SELAMAT DATANG DI{' '}
-              <span className="text-[#0f62c1]">ACADIFY</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed">
-              Akses informasi akademik dan jadwal kuliah dengan mudah.
-              <br />
-              Platform terpadu untuk kebutuhan akademik mahasiswa dan dosen.
-            </p>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center">
-                <LogIn className="w-5 h-5 mr-2" />
-                Masuk ke Portal
-              </button>
-              <button className="border-2 border-[#0f62c1] text-[#0f62c1] hover:bg-[#0f62c1] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center">
-                <UserPlus className="w-5 h-5 mr-2" />
-                Daftar Sekarang
-              </button>
-            </div>
+      <section className="bg-white py-20 md:py-32 relative overflow-hidden">
+        {/* ScrollVelocity full-width */}
+        <ScrollVelocity
+          texts={['SELAMAT DATANG DI ACADIFY']}
+          velocity={100}
+          className="text-4xl md:text-6xl font-bold text-[#0f62c1]"
+        />
+
+        {/* Centered Content */}
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed">
+            Akses informasi akademik dan jadwal kuliah dengan mudah.
+            <br />
+            Platform terpadu untuk kebutuhan akademik mahasiswa dan dosen.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center">
+              <LogIn className="w-5 h-5 mr-2" />
+              Masuk ke Portal
+            </button>
+            <button className="border-2 border-[#0f62c1] text-[#0f62c1] hover:bg-[#0f62c1] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center">
+              <UserPlus className="w-5 h-5 mr-2" />
+              Daftar Sekarang
+            </button>
           </div>
         </div>
       </section>
 
       {/* Cards Section */}
       <section className="py-20 md:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full overflow-hidden text-center">
           <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Fitur Layanan
-            </h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Layanan</h3>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Akses semua kebutuhan akademik Anda dalam satu platform yang terintegrasi
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 lg:px-0">
             {cards.map((card, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 hover:scale-105 border border-gray-100 group"
-              >
+              <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 hover:scale-105 border border-gray-100 group">
                 <div className="flex flex-col items-center text-center">
                   <div className="mb-6 p-4 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors duration-300">
                     {card.icon}
                   </div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-4">
-                    {card.title}
-                  </h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    {card.description}
-                  </p>
+                  <h4 className="text-xl font-bold text-gray-900 mb-4">{card.title}</h4>
+                  <p className="text-gray-600 leading-relaxed">{card.description}</p>
                 </div>
               </div>
             ))}
@@ -139,9 +138,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Kemudahan Akses Informasi Akademik
-              </h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Kemudahan Akses Informasi Akademik</h3>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                 ACADIFY menghadirkan solusi digital terdepan untuk mengelola seluruh kegiatan akademik. 
                 Dengan antarmuka yang intuitif dan fitur-fitur canggih, proses administrasi akademik 
@@ -162,6 +159,7 @@ function App() {
                 </div>
               </div>
             </div>
+
             <div className="lg:pl-12">
               <div className="bg-gradient-to-br from-[#0f62c1] to-blue-700 rounded-2xl p-8 text-white">
                 <h4 className="text-2xl font-bold mb-4">Statistik Platform</h4>
@@ -188,6 +186,7 @@ function App() {
           </div>
         </div>
       </section>
+      
 
       {/* Footer */}
       <footer className="bg-[#0f62c1] text-white py-16">
@@ -222,10 +221,10 @@ function App() {
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-blue-400 pt-8 text-center">
             <p className="text-blue-100">
-              &copy; 2025 ACADIFY. Semua hak cipta dilindungi. Dikembangkan dengan ❤️ untuk kemajuan pendidikan.
+              &copy; 2025 ACADIFY. Semua hak cipta dilindungi. Dikembangkan dengan ❤ untuk kemajuan pendidikan.
             </p>
           </div>
         </div>
