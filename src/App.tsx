@@ -224,7 +224,7 @@ function App() {
 
           <div className="border-t border-blue-400 pt-8 text-center">
             <p className="text-blue-100">
-              &copy; 2025 ACADIFY. Semua hak cipta dilindungi. Dikembangkan dengan ❤ untuk kemajuan pendidikan.
+              &copy; 2025 ACADIFY. Semua hak cipta dilindungi. Dikembangkan oleh acoeng untuk kemajuan pendidikan.
             </p>
           </div>
         </div>
