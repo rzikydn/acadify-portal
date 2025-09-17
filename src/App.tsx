@@ -83,7 +83,7 @@ function App() {
       {/* Hero Section */}
       <section className="bg-white py-20 md:py-32 relative overflow-hidden">
         <ScrollVelocity
-          texts={['SELAMAT DATANG DI ACADIFY']}
+          texts={['SELAMAT DATANG DI ACADIFY!']}
           velocity={100}
           className="text-4xl md:text-6xl font-bold text-[#0f62c1]"
         />
