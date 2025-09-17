@@ -8,11 +8,10 @@ import './components/ScrollVelocity.css';
 
 function App() {
   const navigationItems = [
-    { name: 'Beranda', href: '#' },
-    { name: 'Jadwal', href: '#' },
-    { name: 'Absensi', href: '#' },
-    { name: 'Pengumuman', href: '#' },
-    { name: 'Kontak', href: '#' },
+    { name: 'Beranda', href: '#beranda' },
+    { name: 'Fitur Layanan', href: '#jadwal' },
+    { name: 'Akses Infofmasi', href: '#pengumuman' },
+    { name: 'Kontak', href: '#kontak' },
   ];
 
   const cards = [
@@ -71,6 +70,7 @@ function App() {
                   key={item.name}
                   href={item.href}
                   className="block bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20"
+                  onClick={() => setMobileMenuOpen(false)} // tutup menu saat klik
                 >
                   {item.name}
                 </a>
@@ -81,7 +81,7 @@ function App() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-white py-20 md:py-32 relative overflow-hidden">
+      <section id="beranda" className="bg-white py-20 md:py-32 relative overflow-hidden">
         <ScrollVelocity
           texts={['SELAMAT DATANG DI ACADIFY!']}
           velocity={100}
@@ -107,7 +107,7 @@ function App() {
       </section>
 
       {/* Cards Section */}
-      <section className="py-20 md:py-24 bg-gray-50">
+      <section id="jadwal" className="py-20 md:py-24 bg-gray-50">
         <div className="w-full overflow-hidden text-center">
           <div className="text-center mb-16">
             <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Layanan</h3>
@@ -132,9 +132,9 @@ function App() {
       </section>
 
       {/* Additional Info Section */}
-      <section className="py-20 md:py-24 bg-white">
+      <section id="pengumuman" className="py-20 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
               <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Kemudahan Akses Informasi Akademik</h3>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
@@ -185,8 +185,7 @@ function App() {
       </section>
 
       {/* Interactive Contact Section */}
-      <section className="bg-gradient-to-br from-[#0f62c1] to-blue-700 text-white py-20 md:py-24 relative overflow-hidden">
-        {/* Decorative overlay */}
+      <section id="kontak" className="bg-gradient-to-br from-[#0f62c1] to-blue-700 text-white py-20 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-20 w-40 h-40 bg-white rounded-full blur-3xl"></div>
