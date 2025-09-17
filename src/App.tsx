@@ -23,6 +23,15 @@ function App() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleScroll = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const yOffset = -100; // sesuaikan dengan tinggi header
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
