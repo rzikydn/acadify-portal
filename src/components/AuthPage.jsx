@@ -38,7 +38,7 @@ const AuthPage = () => {
     try {
       if (isLogin) {
         // 🔹 LOGIN
-        const res = await fetch("http://10.0.0.105:5000/api/login", {
+        const res = await fetch("https://66fe8ab247f4.ngrok-free.app/api/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -62,7 +62,7 @@ const AuthPage = () => {
           return;
         }
 
-        const res = await fetch("http://10.0.0.105:5000/api/register", {
+        const res = await fetch("https://66fe8ab247f4.ngrok-free.app/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
