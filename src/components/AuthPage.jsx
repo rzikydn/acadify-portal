@@ -70,55 +70,55 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
           className="flex flex-col justify-center items-center p-6 md:p-12 bg-gradient-to-br from-[#0f62c1] to-[#0a4d99] text-white relative overflow-hidden"
           variants={itemVariants}
         >
-          {/* Background Decorations */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-            <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/5 rounded-full blur-2xl"></div>
-            <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-          </div>
+          {/*{/* Background Decorations */}
+  <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
+    <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/5 rounded-full blur-2xl"></div>
+    <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+  </div>
 
-          <div className="relative z-10 text-center max-w-md">
-            <motion.div className="mb-8" variants={logoVariants}>
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
-                  <GraduationCap size={48} className="text-white" />
-                </div>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">ACADIFY</h1>
-              <p className="text-blue-100 text-lg">Platform Pembelajaran Digital</p>
-            </motion.div>
+  <div className="relative z-10 text-center max-w-md mt-8 md:mt-12">
+    <motion.div className="mb-6" variants={logoVariants}>
+      <div className="flex items-center justify-center mb-3">
+        <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+          <GraduationCap size={36} className="text-white" /> {/* Logo lebih kecil */}
+        </div>
+      </div>
+      <h1 className="text-3xl md:text-4xl font-bold mb-1">ACADIFY</h1>
+      <p className="text-blue-100 text-base md:text-lg">Platform Pembelajaran Digital</p>
+    </motion.div>
 
-            <motion.div className="space-y-6" variants={itemVariants}>
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-full">
-                  <BookOpen size={24} />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold">Pembelajaran Interaktif</h3>
-                  <p className="text-blue-100 text-sm">Akses ribuan materi pembelajaran berkualitas</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-full">
-                  <Users size={24} />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold">Komunitas Belajar</h3>
-                  <p className="text-blue-100 text-sm">Belajar bersama ribuan siswa lainnya</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-white/20 p-3 rounded-full">
-                  <Award size={24} />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-semibold">Sertifikat Resmi</h3>
-                  <p className="text-blue-100 text-sm">Dapatkan sertifikat yang diakui industri</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
+    <motion.div className="space-y-5 mt-6" variants={itemVariants}>
+      <div className="flex items-center gap-4">
+        <div className="bg-white/20 p-3 rounded-full">
+          <BookOpen size={24} />
+        </div>
+        <div className="text-left">
+          <h3 className="font-semibold text-white">Pembelajaran Interaktif</h3>
+          <p className="text-blue-100 text-sm">Akses ribuan materi pembelajaran berkualitas</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="bg-white/20 p-3 rounded-full">
+          <Users size={24} />
+        </div>
+        <div className="text-left">
+          <h3 className="font-semibold text-white">Komunitas Belajar</h3>
+          <p className="text-blue-100 text-sm">Belajar bersama ribuan siswa lainnya</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="bg-white/20 p-3 rounded-full">
+          <Award size={24} />
+        </div>
+        <div className="text-left">
+          <h3 className="font-semibold text-white">Sertifikat Resmi</h3>
+          <p className="text-blue-100 text-sm">Dapatkan sertifikat yang diakui industri</p>
+        </div>
+      </div>
+    </motion.div>
+  </div>
+</motion.div>
 
         {/* Right Side - Auth Form */}
         <motion.div className="flex flex-col justify-center items-center p-6 md:p-12" variants={itemVariants}>
