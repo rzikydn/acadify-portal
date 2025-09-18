@@ -14,7 +14,7 @@ import {
   Award
 } from 'lucide-react';
 
-const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
+const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,11 +32,62 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    try {
+      if (isLogin) {
+        // 🔹 LOGIN
+        const res = await fetch("http://localhost:5000/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ Login berhasil! Selamat datang " + data.user.full_name);
+          console.log("User data:", data.user);
+        } else {
+          alert("❌ " + data.message);
+        }
+
+      } else {
+        // 🔹 REGISTER
+        if (formData.password !== formData.confirmPassword) {
+          alert("❌ Password dan konfirmasi tidak sama!");
+          return;
+        }
+
+        const res = await fetch("http://localhost:5000/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            full_name: formData.fullName, // ⚡ pastikan key sesuai DB
+            email: formData.email,
+            password: formData.password
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ Registrasi berhasil! Silakan login.");
+          setIsLogin(true); // otomatis pindah ke form login
+          setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
+        } else {
+          alert("❌ " + data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("⚠️ Gagal menghubungi server!");
+    }
   };
 
+  // Variants untuk animasi
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } }
@@ -70,68 +121,59 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
           className="flex flex-col justify-center items-center p-6 md:p-12 bg-gradient-to-br from-[#0f62c1] to-[#0a4d99] text-white relative overflow-hidden"
           variants={itemVariants}
         >
-          {/*{/* Background Decorations */}
-  <div className="absolute inset-0 overflow-hidden">
-    <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-    <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/5 rounded-full blur-2xl"></div>
-    <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-  </div>
+          {/* Background Decorations */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
+            <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/5 rounded-full blur-2xl"></div>
+            <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+          </div>
 
-  <div className="relative z-10 text-center max-w-md mt-8 md:mt-12">
-    <motion.div className="mb-6" variants={logoVariants}>
-      <div className="flex items-center justify-center mb-3">
-        <div className="bg-white/20 p-3 rounded-full backdrop-blur-sm">
-          <GraduationCap size={36} className="text-white" /> {/* Logo lebih kecil */}
-        </div>
-      </div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-1">ACADIFY</h1>
-      <p className="text-blue-100 text-base md:text-lg">Platform Pembelajaran Digital</p>
-    </motion.div>
+          <div className="relative z-10 text-center max-w-md">
+            <motion.div className="mb-8" variants={logoVariants}>
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
+                  <GraduationCap size={48} className="text-white" />
+                </div>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2">ACADIFY</h1>
+              <p className="text-blue-100 text-lg">Platform Pembelajaran Digital</p>
+            </motion.div>
 
-    <motion.div className="space-y-5 mt-6" variants={itemVariants}>
-      <div className="flex items-center gap-4">
-        <div className="bg-white/20 p-3 rounded-full">
-          <BookOpen size={24} />
-        </div>
-        <div className="text-left">
-          <h3 className="font-semibold text-white">Pembelajaran Interaktif</h3>
-          <p className="text-blue-100 text-sm">Akses ribuan materi pembelajaran berkualitas</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="bg-white/20 p-3 rounded-full">
-          <Users size={24} />
-        </div>
-        <div className="text-left">
-          <h3 className="font-semibold text-white">Komunitas Belajar</h3>
-          <p className="text-blue-100 text-sm">Belajar bersama ribuan siswa lainnya</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="bg-white/20 p-3 rounded-full">
-          <Award size={24} />
-        </div>
-        <div className="text-left">
-          <h3 className="font-semibold text-white">Sertifikat Resmi</h3>
-          <p className="text-blue-100 text-sm">Dapatkan sertifikat yang diakui industri</p>
-        </div>
-      </div>
-    </motion.div>
-  </div>
-</motion.div>
+            <motion.div className="space-y-6" variants={itemVariants}>
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-full">
+                  <BookOpen size={24} />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold">Pembelajaran Interaktif</h3>
+                  <p className="text-blue-100 text-sm">Akses ribuan materi pembelajaran berkualitas</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-full">
+                  <Users size={24} />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold">Komunitas Belajar</h3>
+                  <p className="text-blue-100 text-sm">Belajar bersama ribuan siswa lainnya</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-full">
+                  <Award size={24} />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold">Sertifikat Resmi</h3>
+                  <p className="text-blue-100 text-sm">Dapatkan sertifikat yang diakui industri</p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
 
         {/* Right Side - Auth Form */}
         <motion.div className="flex flex-col justify-center items-center p-6 md:p-12" variants={itemVariants}>
           <motion.div className="w-full max-w-md" variants={cardVariants}>
-            
-            {/* Tombol Kembali */}
-            <button
-              onClick={onBack}
-              className="mb-4 text-[#0f62c1] font-semibold hover:underline flex items-center gap-2"
-            >
-              ← Kembali ke Homepage
-            </button>
-
             <div className="bg-white rounded-2xl shadow-xl p-8">
               {/* Tab Navigation */}
               <div className="relative mb-8">
@@ -155,7 +197,6 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
                 </div>
               </div>
 
-              {/* Form */}
               <AnimatePresence mode="wait">
                 <motion.form
                   key={isLogin ? 'login' : 'register'}
@@ -253,6 +294,14 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
                     {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
                     {isLogin ? 'Masuk' : 'Daftar'}
                   </motion.button>
+
+                  {isLogin && (
+                    <div className="text-center">
+                      <a href="#" className="text-[#0f62c1] hover:underline text-sm font-medium">
+                        Lupa Password?
+                      </a>
+                    </div>
+                  )}
                 </motion.form>
               </AnimatePresence>
             </div>
@@ -263,9 +312,7 @@ const AuthPage = ({ onBack }) => { // <-- Tambahkan props onBack
       {/* Footer */}
       <motion.footer className="bg-[#0f62c1] text-white py-6" variants={itemVariants}>
         <div className="container mx-auto px-6 text-center">
-          <p className="text-blue-100">
-            © 2025 ACADIFY. Semua hak cipta dilindungi.
-          </p>
+          <p className="text-blue-100">© 2025 ACADIFY. Semua hak cipta dilindungi.</p>
         </div>
       </motion.footer>
     </div>
