@@ -6,12 +6,16 @@ import {
 import ScrollVelocity from './components/ScrollVelocity';
 import './components/ScrollVelocity.css';
 import CountUp from './components/CountUp';
+import AuthPage from './components/AuthPage';
 
 function App() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
   const navigationItems = [
     { name: 'Beranda', href: '#beranda' },
     { name: 'Fitur Layanan', href: '#jadwal' },
-    { name: 'Akses Infofmasi', href: '#pengumuman' },
+    { name: 'Akses Informasi', href: '#pengumuman' },
     { name: 'Kontak', href: '#kontak' },
   ];
 
@@ -22,16 +26,19 @@ function App() {
     { title: 'Nilai & Transkrip', description: 'Lihat nilai semester dan transkrip akademik secara lengkap', icon: <FileText className="w-8 h-8 text-blue-600" /> },
   ];
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const handleScroll = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      const yOffset = -100; // sesuaikan dengan tinggi header
+      const yOffset = -100;
       const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
+  // 🔹 Jika showAuth true, render halaman AuthPage
+  if (showAuth) {
+    return <AuthPage onBack={() => setShowAuth(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -80,7 +87,7 @@ function App() {
                   key={item.name}
                   href={item.href}
                   className="block bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20"
-                  onClick={() => setMobileMenuOpen(false)} // tutup menu saat klik
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </a>
@@ -104,11 +111,17 @@ function App() {
             Platform terpadu untuk kebutuhan akademik mahasiswa dan dosen.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center">
+            <button
+              className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center"
+              onClick={() => setShowAuth(true)}
+            >
               <LogIn className="w-5 h-5 mr-2" />
               Masuk ke Portal
             </button>
-            <button className="border-2 border-[#0f62c1] text-[#0f62c1] hover:bg-[#0f62c1] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center">
+            <button
+              className="border-2 border-[#0f62c1] text-[#0f62c1] hover:bg-[#0f62c1] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center"
+              onClick={() => setShowAuth(true)}
+            >
               <UserPlus className="w-5 h-5 mr-2" />
               Daftar Sekarang
             </button>
@@ -116,28 +129,26 @@ function App() {
         </div>
       </section>
 
-      {/* Cards Section */}
+      {/* Fitur Layanan Section */}
       <section id="jadwal" className="py-20 md:py-24 bg-gray-50">
-        <div className="w-full overflow-hidden text-center">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Layanan</h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Akses semua kebutuhan akademik Anda dalam satu platform yang terintegrasi
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 lg:px-0">
-            {cards.map((card, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 hover:scale-105 border border-gray-100 group">
-                <div className="flex flex-col items-center text-center">
-                  <div className="mb-6 p-4 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors duration-300">
-                    {card.icon}
-                  </div>
-                  <h4 className="text-xl font-bold text-gray-900 mb-4">{card.title}</h4>
-                  <p className="text-gray-600 leading-relaxed">{card.description}</p>
+        <div className="text-center mb-16">
+          <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Layanan</h3>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Akses semua kebutuhan akademik Anda dalam satu platform yang terintegrasi
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 lg:px-0">
+          {cards.map((card, index) => (
+            <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 hover:scale-105 border border-gray-100 group">
+              <div className="flex flex-col items-center text-center">
+                <div className="mb-6 p-4 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors duration-300">
+                  {card.icon}
                 </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4">{card.title}</h4>
+                <p className="text-gray-600 leading-relaxed">{card.description}</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -168,41 +179,36 @@ function App() {
               </div>
             </div>
             <div className="lg:pl-12">
-  <div className="bg-gradient-to-br from-[#0f62c1] to-blue-700 rounded-2xl p-8 text-white">
-    <h4 className="text-2xl font-bold mb-4">Statistik Platform</h4>
-    <div className="grid grid-cols-2 gap-6">
-
-      <div className="text-center">
-        <div className="text-3xl font-bold mb-2">
-          <CountUp from={0} to={10000} duration={2} separator="," suffix="+" />
-        </div>
-        <div className="text-blue-100">Mahasiswa Aktif</div>
-      </div>
-
-      <div className="text-center">
-        <div className="text-3xl font-bold mb-2">
-          <CountUp from={0} to={500} duration={2} separator="," suffix="+" />
-        </div>
-        <div className="text-blue-100">Dosen</div>
-      </div>
-
-      <div className="text-center">
-        <div className="text-3xl font-bold mb-2">
-          <CountUp from={0} to={50} duration={2} separator="," suffix="+" />
-        </div>
-        <div className="text-blue-100">Program Studi</div>
-      </div>
-
-      <div className="text-center">
-        <div className="text-3xl font-bold mb-2">
-          <CountUp from={0} to={99} duration={2} suffix="%" />
-        </div>
-        <div className="text-blue-100">Uptime</div>
-      </div>
-
-    </div>
-  </div>
-</div>
+              <div className="bg-gradient-to-br from-[#0f62c1] to-blue-700 rounded-2xl p-8 text-white">
+                <h4 className="text-2xl font-bold mb-4">Statistik Platform</h4>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold mb-2">
+                      <CountUp from={0} to={10000} duration={2} separator="," suffix="+" />
+                    </div>
+                    <div className="text-blue-100">Mahasiswa Aktif</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold mb-2">
+                      <CountUp from={0} to={500} duration={2} separator="," suffix="+" />
+                    </div>
+                    <div className="text-blue-100">Dosen</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold mb-2">
+                      <CountUp from={0} to={50} duration={2} separator="," suffix="+" />
+                    </div>
+                    <div className="text-blue-100">Program Studi</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold mb-2">
+                      <CountUp from={0} to={99} duration={2} suffix="%" />
+                    </div>
+                    <div className="text-blue-100">Uptime</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
