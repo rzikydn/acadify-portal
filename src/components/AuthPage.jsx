@@ -1,127 +1,139 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LogIn, 
-  UserPlus, 
-  Mail, 
-  Lock, 
-  User, 
-  Eye, 
+// src/pages/AuthPage.jsx
+import React, { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import {
+  LogIn,
+  UserPlus,
+  Mail,
+  Lock,
+  User,
+  Eye,
   EyeOff,
   GraduationCap,
   BookOpen,
   Users,
-  Award
-} from 'lucide-react';
+  Award,
+} from "lucide-react"
+import { supabase } from "../supabaseClient"
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLogin, setIsLogin] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    setLoading(true)
+    setMessage("")
 
     try {
       if (isLogin) {
         // 🔹 LOGIN
-        const res = await fetch("https://6c6d65cf427a.ngrok-free.app/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password
-          })
-        });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        })
 
-        const data = await res.json();
-        if (data.success) {
-          alert("✅ Login berhasil! Selamat datang " + data.user.full_name);
-          console.log("User data:", data.user);
+        if (error) {
+          setMessage(`❌ Login gagal: ${error.message}`)
         } else {
-          alert("❌ " + data.message);
+          setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`)
+          console.log("User data:", data.user)
         }
-
       } else {
         // 🔹 REGISTER
         if (formData.password !== formData.confirmPassword) {
-          alert("❌ Password dan konfirmasi tidak sama!");
-          return;
+          setMessage("❌ Password dan konfirmasi tidak sama!")
+          setLoading(false)
+          return
         }
 
-        const res = await fetch("https://6c6d65cf427a.ngrok-free.app/api/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            full_name: formData.fullName, // ⚡ pastikan key sesuai DB
-            email: formData.email,
-            password: formData.password
-          })
-        });
+        // 1. Register user ke Supabase Auth
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+        })
 
-        const data = await res.json();
-        if (data.success) {
-          alert("✅ Registrasi berhasil! Silakan login.");
-          setIsLogin(true); // otomatis pindah ke form login
-          setFormData({ fullName: '', email: '', password: '', confirmPassword: '' });
-        } else {
-          alert("❌ " + data.message);
+        if (error) {
+          setMessage(`❌ Registrasi gagal: ${error.message}`)
+          setLoading(false)
+          return
+        }
+
+        const user = data.user
+
+        // 2. Simpan Nama Lengkap ke tabel profiles
+        if (user) {
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .insert([{ id: user.id, full_name: formData.fullName }])
+
+          if (profileError) {
+            setMessage(`⚠️ Gagal simpan profile: ${profileError.message}`)
+          } else {
+            setMessage("✅ Registrasi berhasil! Silakan cek email untuk verifikasi.")
+            setIsLogin(true)
+            setFormData({ fullName: "", email: "", password: "", confirmPassword: "" })
+          }
         }
       }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("⚠️ Gagal menghubungi server!");
+    } catch (err) {
+      console.error("Error:", err)
+      setMessage("⚠️ Terjadi kesalahan server.")
     }
-  };
 
-  // Variants untuk animasi
+    setLoading(false)
+  }
+
+  // Variants animasi
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } }
-  };
+    visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } },
+  }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  }
 
   const cardVariants = {
     hidden: { opacity: 0, scale: 0.9, y: 50 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
+    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  }
 
   const logoVariants = {
     hidden: { opacity: 0, scale: 0 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "backOut", delay: 0.2 } }
-  };
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "backOut", delay: 0.2 } },
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <motion.div 
+      <motion.div
         className="min-h-screen grid grid-cols-1 md:grid-cols-2"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Left Side - Branding */}
-        <motion.div 
+        <motion.div
           className="flex flex-col justify-center items-center p-6 md:p-12 bg-gradient-to-br from-[#0f62c1] to-[#0a4d99] text-white relative overflow-hidden"
           variants={itemVariants}
         >
-          {/* Background Decorations */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
             <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/5 rounded-full blur-2xl"></div>
@@ -172,7 +184,10 @@ const AuthPage = () => {
         </motion.div>
 
         {/* Right Side - Auth Form */}
-        <motion.div className="flex flex-col justify-center items-center p-6 md:p-12" variants={itemVariants}>
+        <motion.div
+          className="flex flex-col justify-center items-center p-6 md:p-12"
+          variants={itemVariants}
+        >
           <motion.div className="w-full max-w-md" variants={cardVariants}>
             <div className="bg-white rounded-2xl shadow-xl p-8">
               {/* Tab Navigation */}
@@ -181,7 +196,9 @@ const AuthPage = () => {
                   <button
                     onClick={() => setIsLogin(true)}
                     className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 relative ${
-                      isLogin ? 'bg-[#0f62c1] text-white shadow-md' : 'text-gray-600 hover:text-[#0f62c1]'
+                      isLogin
+                        ? "bg-[#0f62c1] text-white shadow-md"
+                        : "text-gray-600 hover:text-[#0f62c1]"
                     }`}
                   >
                     Masuk
@@ -189,7 +206,9 @@ const AuthPage = () => {
                   <button
                     onClick={() => setIsLogin(false)}
                     className={`flex-1 py-2 px-4 rounded-full font-semibold transition-all duration-300 relative ${
-                      !isLogin ? 'bg-[#0f62c1] text-white shadow-md' : 'text-gray-600 hover:text-[#0f62c1]'
+                      !isLogin
+                        ? "bg-[#0f62c1] text-white shadow-md"
+                        : "text-gray-600 hover:text-[#0f62c1]"
                     }`}
                   >
                     Daftar
@@ -199,7 +218,7 @@ const AuthPage = () => {
 
               <AnimatePresence mode="wait">
                 <motion.form
-                  key={isLogin ? 'login' : 'register'}
+                  key={isLogin ? "login" : "register"}
                   onSubmit={handleSubmit}
                   className="space-y-6"
                   initial={{ opacity: 0, x: isLogin ? -20 : 20 }}
@@ -209,7 +228,9 @@ const AuthPage = () => {
                 >
                   {!isLogin && (
                     <div>
-                      <label className="block text-gray-700 font-semibold mb-2">Nama Lengkap</label>
+                      <label className="block text-gray-700 font-semibold mb-2">
+                        Nama Lengkap
+                      </label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                         <input
@@ -287,20 +308,17 @@ const AuthPage = () => {
 
                   <motion.button
                     type="submit"
+                    disabled={loading}
                     className="w-full bg-[#0f62c1] text-white py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
-                    {isLogin ? 'Masuk' : 'Daftar'}
+                    {loading ? "Loading..." : isLogin ? "Masuk" : "Daftar"}
                   </motion.button>
 
-                  {isLogin && (
-                    <div className="text-center">
-                      <a href="#" className="text-[#0f62c1] hover:underline text-sm font-medium">
-                        Lupa Password?
-                      </a>
-                    </div>
+                  {message && (
+                    <p className="text-center text-sm mt-2">{message}</p>
                   )}
                 </motion.form>
               </AnimatePresence>
@@ -316,7 +334,7 @@ const AuthPage = () => {
         </div>
       </motion.footer>
     </div>
-  );
-};
+  )
+}
 
-export default AuthPage;
+export default AuthPage
