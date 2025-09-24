@@ -1,6 +1,7 @@
-// src/pages/AuthPage.jsx
-import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+// src/components/AuthPage.tsx
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom"; // ✅ untuk redirect
 import {
   LogIn,
   UserPlus,
@@ -13,33 +14,40 @@ import {
   BookOpen,
   Users,
   Award,
-} from "lucide-react"
-import { supabase } from "../supabaseClient"
+} from "lucide-react";
+import { supabase } from "../supabaseClient";
 
-const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+// ✅ props diterima dari App.tsx
+type AuthPageProps = {
+  onLoginSuccess: () => void;
+};
+
+const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState("")
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleInputChange = (e) => {
+  const navigate = useNavigate(); // ✅ hook navigate
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setMessage("")
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
     try {
       if (isLogin) {
@@ -47,79 +55,79 @@ const AuthPage = () => {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
-        })
+        });
 
         if (error) {
-          setMessage(`❌ Login gagal: ${error.message}`)
-        } else {
-          setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`)
-          console.log("User data:", data.user)
+          setMessage(`❌ Login gagal: ${error.message}`);
+        } else if (data?.user) {
+          setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`);
+          console.log("User data:", data.user);
+
+          onLoginSuccess(); // update state di App.tsx// ✅ langsung redirect ke dashboard
         }
       } else {
         // 🔹 REGISTER
         if (formData.password !== formData.confirmPassword) {
-          setMessage("❌ Password dan konfirmasi tidak sama!")
-          setLoading(false)
-          return
+          setMessage("❌ Password dan konfirmasi tidak sama!");
+          setLoading(false);
+          return;
         }
 
-        // 1. Register user ke Supabase Auth
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
-        })
+        });
 
         if (error) {
-          setMessage(`❌ Registrasi gagal: ${error.message}`)
-          setLoading(false)
-          return
+          setMessage(`❌ Registrasi gagal: ${error.message}`);
+          setLoading(false);
+          return;
         }
 
-        const user = data.user
+        const user = data.user;
 
-        // 2. Simpan Nama Lengkap ke tabel profiles
         if (user) {
           const { error: profileError } = await supabase
             .from("profiles")
-            .insert([{ id: user.id, full_name: formData.fullName }])
+            .insert([{ id: user.id, full_name: formData.fullName }]);
 
           if (profileError) {
-            setMessage(`⚠️ Gagal simpan profile: ${profileError.message}`)
+            setMessage(`⚠️ Gagal simpan profile: ${profileError.message}`);
           } else {
-            setMessage("✅ Registrasi berhasil! Silakan cek email untuk verifikasi.")
-            setIsLogin(true)
-            setFormData({ fullName: "", email: "", password: "", confirmPassword: "" })
+            setMessage("✅ Registrasi berhasil! Silakan cek email untuk verifikasi.");
+            setIsLogin(true);
+            setFormData({ fullName: "", email: "", password: "", confirmPassword: "" });
           }
         }
       }
     } catch (err) {
-      console.error("Error:", err)
-      setMessage("⚠️ Terjadi kesalahan server.")
+      console.error("Error:", err);
+      setMessage("⚠️ Terjadi kesalahan server.");
     }
 
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   // Variants animasi
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, scale: 0.9, y: 50 },
     visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-  }
+  };
 
   const logoVariants = {
     hidden: { opacity: 0, scale: 0 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "backOut", delay: 0.2 } },
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -334,7 +342,7 @@ const AuthPage = () => {
         </div>
       </motion.footer>
     </div>
-  )
-}
+  );
+};
 
-export default AuthPage
+export default AuthPage;
