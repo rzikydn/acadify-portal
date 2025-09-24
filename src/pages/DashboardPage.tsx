@@ -163,7 +163,7 @@ const DashboardPage: React.FC = () => {
         >
           <div className="flex items-center space-x-4">
             <motion.div
-              className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
+              className="w-12 h-12 flex-shrink-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
         
