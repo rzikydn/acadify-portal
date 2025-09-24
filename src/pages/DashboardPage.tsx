@@ -18,6 +18,7 @@ import {
   BookOpenCheck,
   Calendar
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -87,21 +88,28 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Implement logout logic here (e.g., clear auth tokens)
+    navigate("/");
+  }
+
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
       {/* Sidebar */}
       <motion.div
         className={`${
-          sidebarCollapsed ? 'w-20' : 'w-64'
+          sidebarCollapsed ? 'w-64' : 'w-256'
         } bg-[#0f62c1] text-white h-screen fixed left-0 top-0 z-40 transition-all duration-300 shadow-xl`}
         initial={false}
-        animate={{ width: sidebarCollapsed ? 80 : 256 }}
+        animate={{ width: sidebarCollapsed ? 93 : 256 }}
       >
         <div className="p-6">
           {/* Logo/Brand */}
           <div className="flex items-center justify-between mb-8">
             <motion.div
-              className="flex items-center space-x-3"
+              className={`flex items-center space-x-3 ${sidebarCollapsed ? 'justify-center' : 'justify-start'}`}
               whileHover={{ scale: 1.05 }}
             >
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
