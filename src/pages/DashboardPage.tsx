@@ -103,7 +103,7 @@ const DashboardPage: React.FC = () => {
           sidebarCollapsed ? 'w-64' : 'w-256'
         } bg-[#0f62c1] text-white h-screen fixed left-0 top-0 z-40 transition-all duration-300 shadow-xl`}
         initial={false}
-        animate={{ width: sidebarCollapsed ? 93 : 256 }}
+        animate={{ width: sidebarCollapsed ? 92 : 256 }}
       >
         <div className="p-6">
           {/* Logo/Brand */}
@@ -133,7 +133,7 @@ const DashboardPage: React.FC = () => {
               <motion.a
                 key={item.label}
                 href="#"
-                className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                className={`flex items-center space-x-3 px-2.5 py-3 rounded-xl transition-all duration-200 ${
                   item.active
                     ? 'bg-blue-800/60 shadow-lg'
                     : 'hover:bg-blue-700/50'
@@ -156,7 +156,7 @@ const DashboardPage: React.FC = () => {
       <div className={`flex-1 ${sidebarCollapsed ? 'ml-20' : 'ml-64'} transition-all duration-300`}>
         {/* Header */}
         <motion.div
-          className="bg-white shadow-md p-6 flex items-center justify-between"
+          className="bg-gray-200 shadow-md p-6 flex items-center justify-between"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
