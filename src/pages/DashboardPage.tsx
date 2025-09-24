@@ -103,7 +103,7 @@ const DashboardPage: React.FC = () => {
           sidebarCollapsed ? 'w-64' : 'w-256'
         } bg-[#0f62c1] text-white h-screen fixed left-0 top-0 z-40 transition-all duration-300 shadow-xl`}
         initial={false}
-        animate={{ width: sidebarCollapsed ? 92 : 256 }}
+        animate={{ width: sidebarCollapsed ? 94 : 256 }}
       >
         <div className="p-6">
           {/* Logo/Brand */}
@@ -121,7 +121,7 @@ const DashboardPage: React.FC = () => {
             </motion.div>
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="lg:hidden"
+              className="lg:hidden  ml-0.5"
             >
               {sidebarCollapsed ? <Menu className="w-6 h-6" /> : <X className="w-6 h-6" />}
             </button>
