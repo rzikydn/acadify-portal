@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router-dom';
 const DashboardPage: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeCourse, setActiveCourse] = useState<string | null>(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false); // Added missing state
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', active: true },
@@ -93,19 +94,26 @@ const DashboardPage: React.FC = () => {
   const handleLogout = () => {
     // Implement logout logic here (e.g., clear auth tokens)
     navigate("/");
-  }
+  };
+
+  const handleMenuClick = (label: string) => {
+    if (label === 'Logout') {
+      setShowLogoutConfirm(true);
+    }
+    // Add other menu actions here
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
       {/* Sidebar */}
       <motion.div
         className={`${
-          sidebarCollapsed ? 'w-64' : 'w-256'
+          sidebarCollapsed ? 'w-20' : 'w-64'
         } bg-[#0f62c1] text-white h-screen fixed left-0 top-0 z-40 transition-all duration-300 shadow-xl`}
         initial={false}
-        animate={{ width: sidebarCollapsed ? 94 : 256 }}
+        animate={{ width: sidebarCollapsed ? 95 : 256 }}
       >
-        <div className="p-6">
+        <div className="p-6 pt-12 md:pt-6">
           {/* Logo/Brand */}
           <div className="flex items-center justify-between mb-8">
             <motion.div
@@ -121,7 +129,7 @@ const DashboardPage: React.FC = () => {
             </motion.div>
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="lg:hidden  ml-0.5"
+              className="lg:hidden ml-0.5"
             >
               {sidebarCollapsed ? <Menu className="w-6 h-6" /> : <X className="w-6 h-6" />}
             </button>
@@ -130,10 +138,10 @@ const DashboardPage: React.FC = () => {
           {/* Navigation */}
           <nav className="space-y-2">
             {menuItems.map((item, index) => (
-              <motion.a
+              <motion.button
                 key={item.label}
-                href="#"
-                className={`flex items-center space-x-3 px-2.5 py-3 rounded-xl transition-all duration-200 ${
+                onClick={() => handleMenuClick(item.label)}
+                className={`w-full flex items-center space-x-3 px-2.5 py-3 rounded-xl transition-all duration-200 ${
                   item.active
                     ? 'bg-blue-800/60 shadow-lg'
                     : 'hover:bg-blue-700/50'
@@ -146,7 +154,7 @@ const DashboardPage: React.FC = () => {
                 {!sidebarCollapsed && (
                   <span className="font-medium">{item.label}</span>
                 )}
-              </motion.a>
+              </motion.button>
             ))}
           </nav>
         </div>
@@ -156,7 +164,7 @@ const DashboardPage: React.FC = () => {
       <div className={`flex-1 ${sidebarCollapsed ? 'ml-20' : 'ml-64'} transition-all duration-300`}>
         {/* Header */}
         <motion.div
-          className="bg-gray-200 shadow-md p-6 flex items-center justify-between"
+          className="bg-gray-200 shadow-md p-6 pt-9 flex items-center justify-between"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -166,7 +174,7 @@ const DashboardPage: React.FC = () => {
               className="w-12 h-12 flex-shrink-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
               whileHover={{ scale: 1.05, rotate: 5 }}
             >
-        
+              W
             </motion.div>
             <div>
               <motion.h2
@@ -527,6 +535,34 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <motion.div
+            className="bg-white p-6 rounded-2xl shadow-lg w-96"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+          >
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Konfirmasi Logout</h2>
+            <p className="text-gray-600 mb-6">Apakah kamu yakin ingin logout?</p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+              >
+                Logout
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
