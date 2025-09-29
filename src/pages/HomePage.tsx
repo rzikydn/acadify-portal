@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import DashboardPage from "../pages/DashboardPage";
 import ScrollVelocity from '../components/ScrollVelocity';
-import CountUp from '../components/CountUp';
+import EnhancedCountUp from '../components/EnhancedCountUp'; // Import komponen baru
 import AuthPage from '../pages/AuthPage';
 import '../components/ScrollVelocity.css';
 
@@ -163,10 +163,53 @@ function HomePage() {
               <div className="bg-gradient-to-br from-[#0f62c1] to-blue-700 rounded-2xl p-8 text-white">
                 <h4 className="text-2xl font-bold mb-4">Statistik Platform</h4>
                 <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center"><div className="text-3xl font-bold mb-2"><CountUp from={0} to={10000} duration={2} separator="," suffix="+" /></div><div className="text-blue-100">Mahasiswa Aktif</div></div>
-                  <div className="text-center"><div className="text-3xl font-bold mb-2"><CountUp from={0} to={500} duration={2} separator="," suffix="+" /></div><div className="text-blue-100">Dosen</div></div>
-                  <div className="text-center"><div className="text-3xl font-bold mb-2"><CountUp from={0} to={50} duration={2} separator="," suffix="+" /></div><div className="text-blue-100">Program Studi</div></div>
-                  <div className="text-center"><div className="text-3xl font-bold mb-2"><CountUp from={0} to={99} duration={2} suffix="%" /></div><div className="text-blue-100">Uptime</div></div>
+                  <div className="text-center">
+                    <EnhancedCountUp 
+                      from={0} 
+                      to={10000} 
+                      duration={2000} 
+                      separator="," 
+                      suffix="+" 
+                      className="text-3xl font-bold mb-2"
+                      threshold={0.5}
+                    />
+                    <div className="text-blue-100">Mahasiswa Aktif</div>
+                  </div>
+                  <div className="text-center">
+                    <EnhancedCountUp 
+                      from={0} 
+                      to={500} 
+                      duration={2000} 
+                      separator="," 
+                      suffix="+" 
+                      className="text-3xl font-bold mb-2"
+                      threshold={0.5}
+                    />
+                    <div className="text-blue-100">Dosen</div>
+                  </div>
+                  <div className="text-center">
+                    <EnhancedCountUp 
+                      from={0} 
+                      to={50} 
+                      duration={2000} 
+                      separator="," 
+                      suffix="+" 
+                      className="text-3xl font-bold mb-2"
+                      threshold={0.5}
+                    />
+                    <div className="text-blue-100">Program Studi</div>
+                  </div>
+                  <div className="text-center">
+                    <EnhancedCountUp 
+                      from={0} 
+                      to={99} 
+                      duration={2000} 
+                      suffix="%" 
+                      className="text-3xl font-bold mb-2"
+                      threshold={0.5}
+                    />
+                    <div className="text-blue-100">Uptime</div>
+                  </div>
                 </div>
               </div>
             </div>
