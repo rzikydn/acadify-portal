@@ -1,4 +1,4 @@
-// src/components/AuthPage.tsx
+// src/pages/AuthPage.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // ✅ untuk redirect
@@ -63,7 +63,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
           setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`);
           console.log("User data:", data.user);
 
-          onLoginSuccess(); // update state di App.tsx// ✅ langsung redirect ke dashboard
+          // ✅ Call callback untuk update state di App.tsx
+          onLoginSuccess();
+          
+          // ✅ Navigate ke dashboard akan otomatis karena state berubah
+          // Tapi kita bisa juga manual navigate untuk memastikan
+          navigate('/dashboard', { replace: true });
         }
       } else {
         // 🔹 REGISTER
