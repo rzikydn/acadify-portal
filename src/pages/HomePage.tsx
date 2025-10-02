@@ -172,7 +172,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={10000} 
-                      duration={2000} 
+                      duration={3000} 
                       separator="," 
                       suffix="+" 
                       className="text-3xl font-bold mb-2"
@@ -184,7 +184,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={500} 
-                      duration={2000} 
+                      duration={3000} 
                       separator="," 
                       suffix="+" 
                       className="text-3xl font-bold mb-2"
@@ -196,7 +196,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={50} 
-                      duration={2000} 
+                      duration={5000} 
                       separator="," 
                       suffix="+" 
                       className="text-3xl font-bold mb-2"
@@ -208,7 +208,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={99} 
-                      duration={2000} 
+                      duration={7000} 
                       suffix="%" 
                       className="text-3xl font-bold mb-2"
                       threshold={0.5}

@@ -158,6 +158,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) => {
       <motion.button
         onClick={handleBackClick}
         className="fixed top-6 left-6 z-50 bg-white text-[#0f62c1] px-4 py-2 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold hover:bg-blue-50 transition-all duration-300 cursor-pointer"
+        style={{ marginTop: 'max(1rem, env(safe-area-inset-top))' }}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3 }}
@@ -177,7 +178,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) => {
       >
         {/* Left Side - Branding */}
         <motion.div
-          className="flex flex-col justify-center items-center p-6 md:p-12 bg-gradient-to-br from-[#0f62c1] to-[#0a4d99] text-white relative overflow-hidden"
+          className="flex flex-col justify-center items-center p-6 pt-19 md:p-12 bg-gradient-to-br from-[#0f62c1] to-[#0a4d99] text-white relative overflow-hidden"
           variants={itemVariants}
         >
           <div className="absolute inset-0 overflow-hidden">
@@ -186,7 +187,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) => {
             <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
           </div>
 
-          <div className="relative z-10 text-center max-w-md">
+          <div className="relative z-10 text-center max-w-md mt-4">
             <motion.div className="mb-8" variants={logoVariants}>
               <div className="flex items-center justify-center mb-4">
                 <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
