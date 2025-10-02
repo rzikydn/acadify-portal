@@ -1,7 +1,7 @@
 // src/pages/AuthPage.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom"; // ✅ untuk redirect
+import { useNavigate } from "react-router-dom";
 import {
   LogIn,
   UserPlus,
@@ -14,10 +14,11 @@ import {
   BookOpen,
   Users,
   Award,
+  ArrowLeft,
+  Home,
 } from "lucide-react";
 import { supabase } from "../supabaseClient";
 
-// ✅ props diterima dari App.tsx
 type AuthPageProps = {
   onLoginSuccess: () => void;
 };
@@ -35,7 +36,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // ✅ hook navigate
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -51,7 +52,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
 
     try {
       if (isLogin) {
-        // 🔹 LOGIN
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
@@ -62,16 +62,10 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
         } else if (data?.user) {
           setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`);
           console.log("User data:", data.user);
-
-          // ✅ Call callback untuk update state di App.tsx
           onLoginSuccess();
-          
-          // ✅ Navigate ke dashboard akan otomatis karena state berubah
-          // Tapi kita bisa juga manual navigate untuk memastikan
           navigate('/dashboard', { replace: true });
         }
       } else {
-        // 🔹 REGISTER
         if (formData.password !== formData.confirmPassword) {
           setMessage("❌ Password dan konfirmasi tidak sama!");
           setLoading(false);
@@ -113,7 +107,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
     setLoading(false);
   };
 
-  // Variants animasi
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } },
@@ -136,6 +129,21 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Tombol Kembali ke Homepage - Fixed Position */}
+      <motion.button
+        onClick={() => navigate('/')}
+        className="fixed top-6 left-6 z-50 bg-white text-[#0f62c1] px-4 py-2 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold hover:bg-blue-50 transition-all duration-300"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <ArrowLeft size={20} />
+        <span className="hidden sm:inline">Kembali ke Beranda</span>
+        <Home size={20} className="sm:hidden" />
+      </motion.button>
+
       <motion.div
         className="min-h-screen grid grid-cols-1 md:grid-cols-2"
         variants={containerVariants}
