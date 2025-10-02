@@ -172,7 +172,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={10000} 
-                      duration={3000} 
+                      duration={5000} 
                       separator="," 
                       suffix="+" 
                       className="text-3xl font-bold mb-2"
@@ -184,7 +184,7 @@ function HomePage() {
                     <EnhancedCountUp 
                       from={0} 
                       to={500} 
-                      duration={3000} 
+                      duration={4000} 
                       separator="," 
                       suffix="+" 
                       className="text-3xl font-bold mb-2"
