@@ -19,11 +19,13 @@ import {
 } from "lucide-react";
 import { supabase } from "../supabaseClient";
 
+// Props yang diterima dari HomePage atau App.tsx
 type AuthPageProps = {
-  onLoginSuccess: () => void;
+  onLoginSuccess?: () => void;
+  onBack?: () => void;
 };
 
-const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
+const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -52,22 +54,30 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
 
     try {
       if (isLogin) {
+        // LOGIN
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
 
         if (error) {
-          setMessage(`❌ Login gagal: ${error.message}`);
+          setMessage(`Login gagal: ${error.message}`);
         } else if (data?.user) {
-          setMessage(`✅ Login berhasil! Selamat datang ${data.user.email}`);
+          setMessage(`Login berhasil! Selamat datang ${data.user.email}`);
           console.log("User data:", data.user);
-          onLoginSuccess();
+          
+          // Call callback jika ada
+          if (onLoginSuccess) {
+            onLoginSuccess();
+          }
+          
+          // Navigate ke dashboard
           navigate('/dashboard', { replace: true });
         }
       } else {
+        // REGISTER
         if (formData.password !== formData.confirmPassword) {
-          setMessage("❌ Password dan konfirmasi tidak sama!");
+          setMessage("Password dan konfirmasi tidak sama!");
           setLoading(false);
           return;
         }
@@ -78,7 +88,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
         });
 
         if (error) {
-          setMessage(`❌ Registrasi gagal: ${error.message}`);
+          setMessage(`Registrasi gagal: ${error.message}`);
           setLoading(false);
           return;
         }
@@ -91,9 +101,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
             .insert([{ id: user.id, full_name: formData.fullName }]);
 
           if (profileError) {
-            setMessage(`⚠️ Gagal simpan profile: ${profileError.message}`);
+            setMessage(`Gagal simpan profile: ${profileError.message}`);
           } else {
-            setMessage("✅ Registrasi berhasil! Silakan cek email untuk verifikasi.");
+            setMessage("Registrasi berhasil! Silakan cek email untuk verifikasi.");
             setIsLogin(true);
             setFormData({ fullName: "", email: "", password: "", confirmPassword: "" });
           }
@@ -101,12 +111,27 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
       }
     } catch (err) {
       console.error("Error:", err);
-      setMessage("⚠️ Terjadi kesalahan server.");
+      setMessage("Terjadi kesalahan server.");
     }
 
     setLoading(false);
   };
 
+  // Handler untuk tombol kembali
+  const handleBackClick = () => {
+    console.log("Back button clicked");
+    console.log("onBack available?", typeof onBack);
+    
+    if (onBack) {
+      // Jika dipanggil dari HomePage dengan state-based navigation
+      onBack();
+    } else {
+      // Fallback: gunakan React Router
+      navigate('/', { replace: false });
+    }
+  };
+
+  // Variants animasi
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.1 } },
@@ -131,8 +156,8 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Tombol Kembali ke Homepage - Fixed Position */}
       <motion.button
-        onClick={() => navigate('/')}
-        className="fixed top-6 left-6 z-50 bg-white text-[#0f62c1] px-4 py-2 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold hover:bg-blue-50 transition-all duration-300"
+        onClick={handleBackClick}
+        className="fixed top-6 left-6 z-50 bg-white text-[#0f62c1] px-4 py-2 rounded-full shadow-lg hover:shadow-xl flex items-center gap-2 font-semibold hover:bg-blue-50 transition-all duration-300 cursor-pointer"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3 }}
@@ -261,6 +286,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                           onChange={handleInputChange}
                           className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#0f62c1] focus:border-transparent outline-none transition-all"
                           placeholder="Masukkan nama lengkap"
+                          required
                         />
                       </div>
                     </div>
@@ -277,6 +303,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                         onChange={handleInputChange}
                         className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#0f62c1] focus:border-transparent outline-none transition-all"
                         placeholder="Masukkan email"
+                        required
                       />
                     </div>
                   </div>
@@ -292,6 +319,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                         onChange={handleInputChange}
                         className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#0f62c1] focus:border-transparent outline-none transition-all"
                         placeholder="Masukkan password"
+                        required
                       />
                       <button
                         type="button"
@@ -315,6 +343,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                           onChange={handleInputChange}
                           className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-[#0f62c1] focus:border-transparent outline-none transition-all"
                           placeholder="Konfirmasi password"
+                          required
                         />
                         <button
                           type="button"
@@ -330,16 +359,24 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                   <motion.button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#0f62c1] text-white py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-[#0f62c1] text-white py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                    whileHover={!loading ? { scale: 1.02 } : {}}
+                    whileTap={!loading ? { scale: 0.98 } : {}}
                   >
                     {isLogin ? <LogIn size={20} /> : <UserPlus size={20} />}
                     {loading ? "Loading..." : isLogin ? "Masuk" : "Daftar"}
                   </motion.button>
 
                   {message && (
-                    <p className="text-center text-sm mt-2">{message}</p>
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`text-center text-sm mt-2 ${
+                        message.includes("berhasil") ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {message}
+                    </motion.p>
                   )}
                 </motion.form>
               </AnimatePresence>

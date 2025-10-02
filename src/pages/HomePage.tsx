@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import DashboardPage from "../pages/DashboardPage";
 import ScrollVelocity from '../components/ScrollVelocity';
-import EnhancedCountUp from '../components/EnhancedCountUp'; // Import komponen baru
+import EnhancedCountUp from '../components/EnhancedCountUp';
 import AuthPage from '../pages/AuthPage';
 import '../components/ScrollVelocity.css';
 
@@ -36,9 +36,14 @@ function HomePage() {
     }
   };
 
-  // Render halaman AuthPage
+  // Render halaman AuthPage dengan props onBack
   if (page === 'auth') {
-    return <AuthPage onBack={() => setPage('home')} onLoginSuccess={() => setPage('dashboard')} />;
+    return (
+      <AuthPage 
+        onBack={() => setPage('home')} 
+        onLoginSuccess={() => setPage('dashboard')} 
+      />
+    );
   }
 
   // Render halaman DashboardPage
@@ -88,7 +93,7 @@ function HomePage() {
                 <button
                   key={item.name}
                   onClick={() => { setMobileMenuOpen(false); handleScroll(item.href.replace('#','')) }}
-                  className="block bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20"
+                  className="block bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 font-medium backdrop-blur-sm border border-white/20 w-full"
                 >
                   {item.name}
                 </button>
@@ -129,7 +134,7 @@ function HomePage() {
           <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Fitur Layanan</h3>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">Akses semua kebutuhan akademik Anda dalam satu platform yang terintegrasi</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 lg:px-0">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4 lg:px-8">
           {cards.map((card, index) => (
             <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 hover:scale-105 border border-gray-100 group">
               <div className="flex flex-col items-center text-center">
