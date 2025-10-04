@@ -103,46 +103,27 @@ function HomePage() {
         )}
       </header>
 
-      {/* Hero Section with Background Image */}
-      <section id="beranda" className="relative py-20 md:py-32 overflow-hidden">
-        {/* Background Image with Dark Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ 
-            backgroundImage: `url('/Backgroundlearning.jpg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center'
-          }}
-        >
-          <div className="absolute inset-0 bg-black/60"></div>
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10">
-          <ScrollVelocity 
-            texts={['SELAMAT DATANG DI ACADIFY!']} 
-            velocity={100} 
-            className="text-4xl md:text-6xl font-bold text-white" 
-          />
-          <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <p className="text-xl md:text-2xl text-white mb-12 leading-relaxed drop-shadow-lg">
-              Akses informasi akademik dan jadwal kuliah dengan mudah.<br />
-              Platform terpadu untuk kebutuhan akademik mahasiswa dan dosen.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center"
-                onClick={() => setPage('auth')}
-              >
-                <LogIn className="w-5 h-5 mr-2" /> Masuk ke Portal
-              </button>
-              <button
-                className="border-2 border-white text-white hover:bg-white hover:text-[#0f62c1] px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center"
-                onClick={() => setPage('auth')}
-              >
-                <UserPlus className="w-5 h-5 mr-2" /> Daftar Sekarang
-              </button>
-            </div>
+      {/* Hero Section */}
+      <section id="beranda" className="bg-white py-20 md:py-32 relative overflow-hidden">
+        <ScrollVelocity texts={['SELAMAT DATANG DI ACADIFY!']} velocity={100} className="text-4xl md:text-6xl font-bold text-[#0f62c1]" />
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed">
+            Akses informasi akademik dan jadwal kuliah dengan mudah.<br />
+            Platform terpadu untuk kebutuhan akademik mahasiswa dan dosen.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button
+              className="bg-[#0f62c1] hover:bg-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 shadow-lg flex items-center"
+              onClick={() => setPage('auth')}
+            >
+              <LogIn className="w-5 h-5 mr-2" /> Masuk ke Portal
+            </button>
+            <button
+              className="border-2 border-[#0f62c1] text-[#0f62c1] hover:bg-[#0f62c1] hover:text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center"
+              onClick={() => setPage('auth')}
+            >
+              <UserPlus className="w-5 h-5 mr-2" /> Daftar Sekarang
+            </button>
           </div>
         </div>
       </section>
